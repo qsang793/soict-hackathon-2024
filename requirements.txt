@@ -1,0 +1,14 @@
+--extra-index-url https://download.pytorch.org/whl/cu113
+torch==1.12.1+cu113
+torchvision==0.13.1+cu113
+torchaudio==0.12.1
+
+ultralytics==8.3.26
+Pillow==10.4.0
+opencv-python==4.10.0.84
+numpy==1.26.4
+pandas==2.2.2
+shapely==2.0.6
+ruff==0.7.0
+wandb==0.18.5
+gdown==5.1.0
