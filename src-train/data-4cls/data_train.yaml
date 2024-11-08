@@ -1,0 +1,12 @@
+## Data 0 ----------------------------------------
+train: /home/manhckv/manhckv/soict/data/original/train
+val: /home/manhckv/manhckv/soict/data/original/valid
+
+# Classes
+nc: 4
+names: ['motorbike', 'car', 'coach', 'truck']
+
+# Nhãn 0: xe máy
+# Nhãn 1: xe ô tô con
+# Nhãn 2: Xe vận tải du lịch (xe khách)
+# Nhãn 3: Xe vận tải container

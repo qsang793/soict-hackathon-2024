@@ -161,10 +161,15 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-__weights/
+# ignore all folders starting with __
+__*/
+
 SOICT2024-VEHICLE-DETECTION/
+SOICT2024-VEHICLE-DETECTION-1CLS/
+SOICT2024-VEHICLE-CLASSIFICATION/
 data/
 wandb/
 
 # ignore all .pt files
 *.pt
+runs/
