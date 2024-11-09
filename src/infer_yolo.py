@@ -27,13 +27,11 @@ if __name__ == "__main__":
     output_path = "predict.txt"
 
     # Load a model
-    model_path = (
-        "/home/manhckv/manhckv/soict/SOICT2024-VEHICLE-DETECTION/run_2/weights/best.pt"
-    )
+    model_path = "SOICT2024-VEHICLE-DETECTION-1CLS/run_0/weights/best.pt"
     model = YOLO(model_path)
 
-    conf = 0.6
-    iou = 0.5
+    conf = 0.25
+    iou = 0.7
 
     results = []
     for img_name in tqdm(os.listdir(img_dir), desc="Inferencing"):

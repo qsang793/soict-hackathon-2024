@@ -1,5 +1,6 @@
 """Train 1 class vehicle detection model"""
 
+import torch
 from ultralytics import YOLO
 
 import wandb
@@ -8,7 +9,7 @@ from wandb.integration.ultralytics import add_wandb_callback
 
 ## Config
 project = "SOICT2024-VEHICLE-DETECTION-1CLS"
-run_name = "run_0"
+run_name = "run_1"
 
 
 pretrain_weight = "/home/manhckv/manhckv/soict/__weights/yolov9/yolov9e.pt"
@@ -19,6 +20,7 @@ batch_size = 32
 
 device = [0, 1]
 workers = 8
+cos_lr = True
 
 resume = False
 plots = False
@@ -28,6 +30,7 @@ model = YOLO(pretrain_weight)
 add_wandb_callback(model)
 
 ## Train
+torch.cuda.empty_cache()
 results = model.train(
     data=data_yaml,
     epochs=epochs,
@@ -35,6 +38,7 @@ results = model.train(
     batch=batch_size,
     device=device,
     workers=workers,
+    cos_lr=cos_lr,
     project=project,
     name=run_name,
     resume=resume,
