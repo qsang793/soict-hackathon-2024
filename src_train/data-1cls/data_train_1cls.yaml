@@ -1,0 +1,10 @@
+## Data 0 ----------------------------------------
+# train: /home/manhckv/manhckv/soict/data/data-1cls/73/train
+# val: /home/manhckv/manhckv/soict/data/data-1cls/73/valid
+
+train: /home/manhckv/manhckv/soict/data/data-1cls/full/train
+val: /home/manhckv/manhckv/soict/data/data-1cls/full/valid
+
+# Classes
+nc: 1
+names: ['vehicle']
