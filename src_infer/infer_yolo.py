@@ -27,10 +27,10 @@ if __name__ == "__main__":
     output_path = "predict.txt"
 
     # Load a model
-    model_path = "SOICT2024-VEHICLE-DETECTION/run_2/weights/best.pt"
+    model_path = "SOICT2024-VEHICLE-DETECTION/run_3/weights/best.pt"
     model = YOLO(model_path)
 
-    conf = 0.05
+    conf = 0.5
     iou = 0.5
 
     results = []

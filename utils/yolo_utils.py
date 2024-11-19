@@ -3,8 +3,8 @@ import cv2
 from utils.const import CLASSES_MAP, COLORS_MAP, REMAP_NIGHT_CLASSES
 
 
-def convert_yolo_to_xyxy(bbox, img_shape):
-    image_h, image_w = img_shape[:2]
+def convert_yolo_to_xyxy(bbox, width_height):
+    image_w, image_h = width_height
     xc, yc, w, h = bbox
     x1 = int((xc - w / 2) * image_w)
     y1 = int((yc - h / 2) * image_h)

@@ -46,9 +46,9 @@ ENERGY_MASK_CONST = 100000.0  # large energy value for protective masking
 MASK_THRESHOLD = 10  # minimum pixel intensity for binary mask
 USE_FORWARD_ENERGY = True  # if True, use forward energy algorithm
 
-device = torch.device("cpu")
-model_path = "/home/manhckv/manhckv/soict/src_test/big-lama.pt"
-model = torch.jit.load(model_path, map_location="cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model_path = "/home/manhckv/manhckv/soict/src_obj_removal/big-lama.pt"
+model = torch.jit.load(model_path, map_location=device)
 model = model.to(device)
 model.eval()
 
