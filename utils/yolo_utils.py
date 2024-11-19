@@ -34,6 +34,18 @@ def read_yolo_txt(txt_path):
         if label in CLASSES_MAP:
             labels.append(int(label))
         else:
-            labels.append(REMAP_NIGHT_CLASSES[int(label)])
+            print(f"Unknown class: {txt_path}, {label}")
 
     return boxes, labels
+
+
+def images_to_video(images, save_path, height=720, width=1280, fps=3):
+    video_writer = cv2.VideoWriter(
+        save_path,
+        cv2.VideoWriter_fourcc(*"mp4v"),
+        fps,
+        (width, height),
+    )
+    for image in images:
+        video_writer.write(image)
+    video_writer.release()

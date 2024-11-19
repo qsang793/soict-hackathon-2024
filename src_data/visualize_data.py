@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import cv2
 from tqdm import tqdm
@@ -7,18 +8,21 @@ from utils.yolo_utils import convert_yolo_to_xyxy, read_yolo_txt, visualize_imag
 
 
 if __name__ == "__main__":
-    data_root = "/home/manhckv/manhckv/soict/data/valid"
-    images_dir = os.path.join(data_root, "images")
-    labels_dir = os.path.join(data_root, "labels")
+    data_root = r"D:\Project\SoICT2024\data\data_final\cam_01\train"
+    image_dir = os.path.join(data_root, "images")
+    label_dir = os.path.join(data_root, "labels")
 
-    num_to_visualize = 100  # if -1, visualize all images
+    # Set to -1 to visualize all images
+    num_to_visualize = 200
 
     save_dir = "__visualized"
-    os.makedirs(save_dir, exist_ok=True)
+    if os.path.exists(save_dir):
+        shutil.rmtree(save_dir)
+    os.makedirs(save_dir)
 
-    for image_name in tqdm(os.listdir(images_dir)[:num_to_visualize]):
-        image_path = os.path.join(images_dir, image_name)
-        label_path = os.path.join(labels_dir, image_name.rsplit(".", 1)[0] + ".txt")
+    for image_name in tqdm(os.listdir(image_dir)[:num_to_visualize]):
+        image_path = os.path.join(image_dir, image_name)
+        label_path = os.path.join(label_dir, image_name.replace(".jpg", ".txt"))
 
         image = cv2.imread(image_path)
         boxes, labels = read_yolo_txt(label_path)
