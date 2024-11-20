@@ -9,15 +9,15 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Create and set the working directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy the requirements file
-COPY requirements.txt /app/
+COPY requirements.txt /src/
 
 # Install Python dependencies
 RUN --mount=type=cache,target=/root/.cache/pip pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy the application code
-COPY . /app/
+COPY . /src/
 
-ENV PYTHONPATH="/app:${PYTHONPATH}"
+ENV PYTHONPATH="/src"

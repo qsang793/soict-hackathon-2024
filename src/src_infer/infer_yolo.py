@@ -2,16 +2,17 @@ import argparse
 import os
 
 import cv2
+import torch
 from tqdm import tqdm
 from ultralytics import YOLO
 
-from utils.yolo_utils import visualize_images
+from src.utils.yolo_utils import visualize_images
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
-    parser.add_argument("--model_path", type=str, default="__project_weights/best.pt")
-    parser.add_argument("--img_dir", type=str, default="data/public_test")
+    parser.add_argument("--model_path", type=str, default="weights/best.pt")
+    parser.add_argument("--img_dir", type=str, default="public_test")
     parser.add_argument("--output_path", type=str, default="predict.txt")
 
     parser.add_argument(
@@ -36,6 +37,7 @@ if __name__ == "__main__":
 
     conf = 0.5
     iou = 0.5
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     results = []
     for img_name in tqdm(os.listdir(img_dir), desc="Inferencing"):
@@ -46,6 +48,7 @@ if __name__ == "__main__":
             conf=conf,
             iou=iou,
             verbose=False,
+            device=device,
         )[0]
 
         if len(detections.boxes) == 0:

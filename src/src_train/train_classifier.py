@@ -7,17 +7,17 @@ from wandb.integration.ultralytics import add_wandb_callback
 
 
 ## Config
-project = "SOICT2024-VEHICLE-CLASSIFICATION"
+project = "SOICT2024-DAY-NIGHT-CLASSIFY"
 run_name = "run_0"
 
 
-pretrain_weight = "/home/manhckv/manhckv/soict/__weights/yolov11-cls/yolo11x-cls.pt"
+pretrain_weight = "/home/manhckv/manhckv/soict/__pretrained_weights/yolo11x-cls.pt"
 data_dir = "/home/manhckv/manhckv/soict/data/day_night_classify"
 
 epochs = 200
 batch_size = 32
 
-device = [0, 1]
+device = [1]
 workers = 8
 
 resume = False
