@@ -10,6 +10,10 @@ from utils.yolo_utils import visualize_images
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
+    parser.add_argument("--model_path", type=str, default="__project_weights/best.pt")
+    parser.add_argument("--img_dir", type=str, default="data/public_test")
+    parser.add_argument("--output_path", type=str, default="predict.txt")
+
     parser.add_argument(
         "--vis", action="store_true", help="Visualize the images with detections"
     )
@@ -23,11 +27,11 @@ if __name__ == "__main__":
         visualized_dir = "__visualized"
         os.makedirs(visualized_dir, exist_ok=True)
 
-    img_dir = "data/public_test"
-    output_path = "predict.txt"
+    img_dir = args.img_dir
+    output_path = args.output_path
 
     # Load a model
-    model_path = "SOICT2024-VEHICLE-DETECTION/run_3/weights/best.pt"
+    model_path = args.model_path
     model = YOLO(model_path)
 
     conf = 0.5
