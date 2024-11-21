@@ -168,11 +168,12 @@ SOICT2024-VEHICLE-DETECTION/
 SOICT2024-VEHICLE-DETECTION-1CLS/
 SOICT2024-VEHICLE-CLASSIFICATION/
 SOICT2024-DAY-NIGHT-CLASSIFY/
-data/
+__data/
 wandb/
 
 # ignore all .pt files
 *.pt
+*.pth
 runs/
 
 # ignore all images
