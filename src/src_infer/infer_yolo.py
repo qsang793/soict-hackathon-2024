@@ -11,7 +11,7 @@ from src.utils.yolo_utils import visualize_images
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
-    parser.add_argument("--model_path", type=str, default="weights/best.pt")
+    parser.add_argument("--model_path", type=str, default="weights/vehicle/epoch100.pt")
     parser.add_argument("--img_dir", type=str, default="public_test")
     parser.add_argument("--output_path", type=str, default="predict.txt")
 
@@ -35,8 +35,8 @@ if __name__ == "__main__":
     model_path = args.model_path
     model = YOLO(model_path)
 
-    conf = 0.5
-    iou = 0.5
+    conf = 0.01
+    iou = 0.6
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     results = []

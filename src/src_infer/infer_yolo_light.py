@@ -13,7 +13,10 @@ from src.utils.yolo_utils import visualize_images
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
-    parser.add_argument("--img_dir", type=str, default="public_test")
+    # parser.add_argument("--img_dir", type=str, default="public_test")
+    parser.add_argument(
+        "--img_dir", type=str, default="/home/manhckv/manhckv/soict/__visualized"
+    )
     parser.add_argument(
         "--vehicle_model_path", type=str, default="weights/vehicle/epoch100.pt"
     )
@@ -38,7 +41,7 @@ def infer_classify(model, source) -> int:
     return cls_
 
 
-def infer_detect(model, source, conf=0.01, iou=0.7):
+def infer_detect(model, source, conf=0.01, iou=1):
     detections = model.predict(
         source=source,
         conf=conf,

@@ -17,3 +17,8 @@
 - To run infer:
 `python3 src/src_infer/infer_yolo_light.py`
 
+- To zip docker:
+`docker save -o export_image.tar ${IMAGE_NAME}:${IMAGE_VERSION}`
+
+- Docker copy
+`docker cp 2399eae3124d:/src/predict.txt . `
