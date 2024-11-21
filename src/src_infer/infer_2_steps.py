@@ -6,7 +6,7 @@ import cv2
 from tqdm import tqdm
 from ultralytics import YOLO
 
-from utils.yolo_utils import visualize_images
+from src.utils.yolo_utils import visualize_images
 
 
 @dataclass

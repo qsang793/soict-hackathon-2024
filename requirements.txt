@@ -6,12 +6,12 @@ torchaudio==0.12.1
 ultralytics==8.3.26
 Pillow==10.4.0
 opencv-python==4.10.0.84
-numpy==1.26.4
-pandas==2.2.2
+numpy==1.24.4
+pandas==2.0.3
 shapely==2.0.6
 ruff==0.7.0
 wandb==0.18.5
 gdown==5.1.0
 tqdm==4.67.0
 natsort==8.4.0
-scikit-image==0.22.0
+scikit-image==0.21.0

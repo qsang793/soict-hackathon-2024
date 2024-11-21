@@ -12,7 +12,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-from LoLi_IEA.ColorSpace import colorSpace as cp
+from src.LoLi_IEA.colorSpace import HsvToRgb, RgbToHsv
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -24,7 +24,7 @@ torch.manual_seed(0)
 def Enhancement(imgx, device):
     rows, columns, dimension = imgx.shape
 
-    HSVInput = cp.RgbToHsv(imgx)
+    HSVInput = RgbToHsv(imgx)
 
     # HSV Components
     hueComponent = HSVInput[:, :, 0]
@@ -50,7 +50,7 @@ def Enhancement(imgx, device):
     valEnhComponent = valEnhancement.detach().cpu().numpy().reshape([rows1, columns1])
 
     HSV = np.dstack((hueComponent, satComponent, valEnhComponent))
-    algorithm = cp.HsvToRgb(HSV)
+    algorithm = HsvToRgb(HSV)
     return algorithm
 
 
@@ -173,14 +173,14 @@ class Enhance(nn.Module):
 
 if __name__ == "__main__":
     modelClass = Classification().to(device)
-    modelClass.load_state_dict(torch.load("LoLi_IEA/Models/CLASSIFICATION.pt"))
+    modelClass.load_state_dict(torch.load("weights/LoLi_IEA/CLASSIFICATION.pt"))
 
     modelValL = Enhance().to(device)
-    modelValL.load_state_dict(torch.load("LoLi_IEA/Models/LOCAL.pt"))
+    modelValL.load_state_dict(torch.load("weights/LoLi_IEA/LOCAL.pt"))
     modelValL.eval()
 
     modelValG = Enhance().to(device)
-    modelValG.load_state_dict(torch.load("LoLi_IEA/Models/GLOBAL.pt"))
+    modelValG.load_state_dict(torch.load("weights/LoLi_IEA/GLOBAL.pt"))
     modelValG.eval()
 
     enhancementSet = (

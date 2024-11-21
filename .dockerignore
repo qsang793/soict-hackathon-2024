@@ -5,3 +5,5 @@ SOICT2024-DAY-NIGHT-CLASSIFY/
 runs/
 data/
 wandb/
+__*/
+yolo11n.pt

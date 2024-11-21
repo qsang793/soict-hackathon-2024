@@ -10,3 +10,10 @@
 - Step 2: Build app: `make build`
 
 - Step 3: Run app: `make up` & Down app: `make down`
+
+- To run:
+`docker run -it --rm --runtime=nvidia --gpus all manhckv/test:latest`
+
+- To run infer:
+`python3 src/src_infer/infer_yolo_light.py`
+
