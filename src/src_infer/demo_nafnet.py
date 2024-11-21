@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
-from basicsr.models import create_model
-from basicsr.utils import img2tensor as _img2tensor
-from basicsr.utils import tensor2img
-from basicsr.utils.options import parse
+
+from NAFNet.basicsr.models import create_model
+from NAFNet.basicsr.utils import img2tensor as _img2tensor
+from NAFNet.basicsr.utils import tensor2img
+from NAFNet.basicsr.utils.options import parse
 
 
 def imread(img_path):
@@ -39,13 +40,13 @@ if __name__ == "__main__":
     from tqdm import tqdm
 
     ## Create model --------
-    opt_path = "/home/manhckv/manhckv/soict/weights/NAFNNet/NAFNet-width64.yml"
+    opt_path = "weights/NAFNNet/NAFNet-width64.yml"
     opt = parse(opt_path, is_train=False)
     opt["dist"] = False
     NAFNet = create_model(opt)
 
     ## Inference --------
-    image_dir = "/home/manhckv/manhckv/soict/public_test"
+    image_dir = "public_test"
 
     save_dir = "__visualized"
     os.makedirs(save_dir, exist_ok=True)

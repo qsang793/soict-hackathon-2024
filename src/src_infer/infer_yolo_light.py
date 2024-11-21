@@ -8,6 +8,10 @@ from tqdm import tqdm
 from ultralytics import YOLO
 
 from src.LoLi_IEA.LoLi_IEA import LoLi_IEA
+from src.NAFNet.basicsr.models import create_model
+from src.NAFNet.basicsr.utils import img2tensor as _img2tensor
+from src.NAFNet.basicsr.utils import tensor2img
+from src.NAFNet.basicsr.utils.options import parse
 from src.utils.yolo_utils import visualize_images
 
 
