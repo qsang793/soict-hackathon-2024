@@ -1,6 +1,6 @@
 ## Data
-train: training_data/train
-val: /home/manhckv/manhckv/soict/__data/data_hack/val
+train: data_train_final/train
+val: data_train_final/val
 
 # Classes
 nc: 4

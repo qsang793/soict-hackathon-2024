@@ -4,6 +4,8 @@ torchvision==0.13.1+cu113
 torchaudio==0.12.1
 
 ultralytics==8.3.26
+transformers==4.46.1
+scikit-learn==1.5.2
 Pillow==10.4.0
 opencv-python==4.10.0.84
 numpy==1.24.4

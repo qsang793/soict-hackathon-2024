@@ -9,13 +9,13 @@ from wandb.integration.ultralytics import add_wandb_callback
 
 ## Config
 project = "SOICT2024-VEHICLE-DETECTION"
-run_name = "run_hack"
+run_name = "run_0"
 
 
-pretrain_weight = "/home/manhckv/manhckv/soict/weights/vehicle/epoch140.pt"
-data_yaml = "/home/manhckv/manhckv/soict/src/src_train/data-detection/data_train.yaml"
+pretrain_weight = "pretrained/yolov9e.pt"
+data_yaml = "src/src_train/data-detection/data_train.yaml"
 
-epochs = 200
+epochs = 500
 batch_size = 32
 
 patience = 500

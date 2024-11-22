@@ -19,7 +19,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
     parser.add_argument("--img_dir", type=str, default="public_test")
     parser.add_argument(
-        "--vehicle_model_path", type=str, default="weights/vehicle/epoch200.pt"
+        "--vehicle_model_path", type=str, default="weights/vehicle/epoch40.pt"
     )
     parser.add_argument(
         "--daynight_model_path", type=str, default="weights/day_night/best.pt"

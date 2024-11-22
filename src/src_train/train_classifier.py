@@ -11,13 +11,13 @@ project = "SOICT2024-DAY-NIGHT-CLASSIFY"
 run_name = "run_1"
 
 
-pretrain_weight = "/home/manhckv/manhckv/soict/__pretrained_weights/yolo11x-cls.pt"
-data_dir = "/home/manhckv/manhckv/soict/data/day_night_classify"
+pretrain_weight = "weights/pretrained/yolo11x-cls.pt"
+data_dir = "data_day_time"
 
 epochs = 100
 batch_size = 32
 
-device = [1]
+device = [0]
 workers = 8
 
 resume = False

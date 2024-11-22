@@ -1,8 +1,10 @@
+import argparse
 import os
+import random
+
 import cv2
 import numpy as np
-import random
-import argparse
+
 
 def load_labels(label_path):
     """
@@ -10,9 +12,9 @@ def load_labels(label_path):
     """
     if not os.path.isfile(label_path):
         return []
-    
+
     labels = []
-    with open(label_path, 'r') as f:
+    with open(label_path, "r") as f:
         for line in f:
             parts = line.strip().split()
             if len(parts) != 5:
@@ -21,12 +23,13 @@ def load_labels(label_path):
                 class_id = int(parts[0])
                 x_center = float(parts[1])
                 y_center = float(parts[2])
-                width = abs(float(parts[3]))  
-                height = abs(float(parts[4]))  
+                width = abs(float(parts[3]))
+                height = abs(float(parts[4]))
                 labels.append((class_id, x_center, y_center, width, height))
             except ValueError:
                 continue
     return labels
+
 
 def calculate_iou(bbox1, bbox2):
     """
@@ -39,7 +42,7 @@ def calculate_iou(bbox1, bbox2):
     y_min = np.maximum(bbox1[1], bbox2[1])
     x_max = np.minimum(bbox1[2], bbox2[2])
     y_max = np.minimum(bbox1[3], bbox2[3])
-    
+
     inter_width = np.maximum(0, x_max - x_min)
     inter_height = np.maximum(0, y_max - y_min)
 
@@ -55,6 +58,7 @@ def calculate_iou(bbox1, bbox2):
 
     return inter_area / union_area if union_area > 0 else 0.0
 
+
 def paste_image(base_image, paste_img, paste_box):
     """
     Paste an image onto the base image at the specified bounding box using NumPy.
@@ -69,8 +73,12 @@ def paste_image(base_image, paste_img, paste_box):
 
     paste_img_resized = cv2.resize(paste_img, (paste_width, paste_height))
     base_height, base_width, _ = base_image.shape
-    x_min_clipped, y_min_clipped = np.clip([x_min, y_min], [0, 0], [base_width, base_height])
-    x_max_clipped, y_max_clipped = np.clip([x_max, y_max], [0, 0], [base_width, base_height])
+    x_min_clipped, y_min_clipped = np.clip(
+        [x_min, y_min], [0, 0], [base_width, base_height]
+    )
+    x_max_clipped, y_max_clipped = np.clip(
+        [x_max, y_max], [0, 0], [base_width, base_height]
+    )
     paste_width_clipped = x_max_clipped - x_min_clipped
     paste_height_clipped = y_max_clipped - y_min_clipped
 
@@ -79,11 +87,16 @@ def paste_image(base_image, paste_img, paste_box):
         return base_image
 
     if (paste_width_clipped != paste_width) or (paste_height_clipped != paste_height):
-        paste_img_resized = cv2.resize(paste_img, (paste_width_clipped, paste_height_clipped))
+        paste_img_resized = cv2.resize(
+            paste_img, (paste_width_clipped, paste_height_clipped)
+        )
 
-    base_image[y_min_clipped:y_max_clipped, x_min_clipped:x_max_clipped] = paste_img_resized
+    base_image[y_min_clipped:y_max_clipped, x_min_clipped:x_max_clipped] = (
+        paste_img_resized
+    )
 
     return base_image
+
 
 def normalize_label(label, image_width, image_height):
     """
@@ -96,15 +109,24 @@ def normalize_label(label, image_width, image_height):
         return (class_id, *coordinates)
 
     normalized_coords = np.empty_like(coordinates)
-    normalized_coords[0] = coordinates[0] / image_width   # x_center_norm
+    normalized_coords[0] = coordinates[0] / image_width  # x_center_norm
     normalized_coords[1] = coordinates[1] / image_height  # y_center_norm
-    normalized_coords[2] = coordinates[2] / image_width   # width_norm
+    normalized_coords[2] = coordinates[2] / image_width  # width_norm
     normalized_coords[3] = coordinates[3] / image_height  # height_norm
     normalized_coords = np.clip(normalized_coords, 0, 1)
 
     return (class_id, *normalized_coords)
 
-def augment_image(base_image_path, base_label_path, class_dirs, output_image_path, output_label_path, iou_threshold=0.1, max_attempts=20):
+
+def augment_image(
+    base_image_path,
+    base_label_path,
+    class_dirs,
+    output_image_path,
+    output_label_path,
+    iou_threshold=0.1,
+    max_attempts=20,
+):
     """
     Augment the base image by pasting images from different classes.
     """
@@ -127,15 +149,18 @@ def augment_image(base_image_path, base_label_path, class_dirs, output_image_pat
     for label in normalized_base_labels:
         bbox = [
             (label[1] - label[3] / 2) * width,  # x_min
-            (label[2] - label[4] / 2) * height, # y_min
+            (label[2] - label[4] / 2) * height,  # y_min
             (label[1] + label[3] / 2) * width,  # x_max
-            (label[2] + label[4] / 2) * height  # y_max
+            (label[2] + label[4] / 2) * height,  # y_max
         ]
         base_boxes.append(bbox)
 
     for class_dir in class_dirs:
-
-        image_files = [f for f in os.listdir(class_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+        image_files = [
+            f
+            for f in os.listdir(class_dir)
+            if f.lower().endswith((".jpg", ".jpeg", ".png"))
+        ]
         if len(image_files) < 2:
             print(f"Not enough images in {class_dir}. Skipping this class.")
             continue
@@ -148,24 +173,28 @@ def augment_image(base_image_path, base_label_path, class_dirs, output_image_pat
             overlap_found = False
 
             for image_name in selected_images:
-                label_name = os.path.splitext(image_name)[0] + '.txt'
+                label_name = os.path.splitext(image_name)[0] + ".txt"
                 label_path = os.path.join(class_dir, label_name)
                 labels = load_labels(label_path)
                 if not labels:
-                    print(f"No labels found for image: {image_name}. Skipping these images.")
+                    print(
+                        f"No labels found for image: {image_name}. Skipping these images."
+                    )
                     overlap_found = True
                     break
                 label = labels[0]
                 bbox = [
                     label[1],  # x_center
-                    label[2], # y_center
+                    label[2],  # y_center
                     label[3],  # width
-                    label[4]  # height
+                    label[4],  # height
                 ]
                 selected_boxes.append(bbox)
 
             if overlap_found or len(selected_boxes) != 2:
-                print(f"Attempt {attempts}: Invalid selection. Retrying with different images.")
+                print(
+                    f"Attempt {attempts}: Invalid selection. Retrying with different images."
+                )
                 continue
 
             selected_absolute_bboxes = []
@@ -177,16 +206,22 @@ def augment_image(base_image_path, base_label_path, class_dirs, output_image_pat
                 y_max = y_center + bbox_height / 2
                 selected_absolute_bboxes.append([x_min, y_min, x_max, y_max])
 
-            iou = calculate_iou(selected_absolute_bboxes[0], selected_absolute_bboxes[1])
+            iou = calculate_iou(
+                selected_absolute_bboxes[0], selected_absolute_bboxes[1]
+            )
             if iou > iou_threshold:
-                print(f"Attempt {attempts}: IoU between selected images is {iou:.2f} > {iou_threshold}. Retrying.")
+                print(
+                    f"Attempt {attempts}: IoU between selected images is {iou:.2f} > {iou_threshold}. Retrying."
+                )
                 continue
 
             for box in selected_absolute_bboxes:
                 for base_box in base_boxes:
                     current_iou = calculate_iou(box, base_box)
                     if current_iou > iou_threshold:
-                        print(f"Attempt {attempts}: Selected box overlaps with base box (IoU={current_iou:.2f}). Retrying.")
+                        print(
+                            f"Attempt {attempts}: Selected box overlaps with base box (IoU={current_iou:.2f}). Retrying."
+                        )
                         overlap_found = True
                         break
                 if overlap_found:
@@ -202,7 +237,7 @@ def augment_image(base_image_path, base_label_path, class_dirs, output_image_pat
                     print(f"Cannot read image: {paste_img_path}. Skipping this image.")
                     continue
                 augmented_image = paste_image(augmented_image, paste_img, box)
-                
+
                 class_id = labels[0][0]
                 x_center_new = ((box[0] + box[2]) / 2) / width
                 y_center_new = ((box[1] + box[3]) / 2) / height
@@ -213,53 +248,101 @@ def augment_image(base_image_path, base_label_path, class_dirs, output_image_pat
                 y_center_new = min(max(y_center_new, 0), 1)
                 bbox_width_new = min(max(bbox_width_new, 0), 1)
                 bbox_height_new = min(max(bbox_height_new, 0), 1)
-                new_label = (int(class_id), x_center_new, y_center_new, bbox_width_new, bbox_height_new)
+                new_label = (
+                    int(class_id),
+                    x_center_new,
+                    y_center_new,
+                    bbox_width_new,
+                    bbox_height_new,
+                )
                 new_labels.append(new_label)
                 base_boxes.append(box)
 
                 print(f"Pasted {image_name} onto base image.")
 
-            print(f"Attempt {attempts}: Successfully augmented with images {selected_images} from {class_dir}.")
+            print(
+                f"Attempt {attempts}: Successfully augmented with images {selected_images} from {class_dir}."
+            )
             break
         else:
-            print(f"Reached maximum attempts for class {class_dir}. Skipping augmentation for this class.")
+            print(
+                f"Reached maximum attempts for class {class_dir}. Skipping augmentation for this class."
+            )
 
     cv2.imwrite(output_image_path, augmented_image)
     print(f"Saved augmented image to {output_image_path}")
 
-    with open(output_label_path, 'w') as f:
+    with open(output_label_path, "w") as f:
         for label in new_labels:
             class_id, x_center, y_center, width, height = label
             x_center = min(max(float(x_center), 0), 1)
             y_center = min(max(float(y_center), 0), 1)
             width = min(max(float(width), 0), 1)
             height = min(max(float(height), 0), 1)
-            f.write(f"{class_id} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
+            f.write(
+                f"{class_id} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n"
+            )
     print(f"Saved updated labels to {output_label_path}")
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Data augmentation script.')
-    parser.add_argument('--base_images_dir', type=str, required=True, help='Path to the base images directory')
-    parser.add_argument('--base_labels_dir', type=str, required=True, help='Path to the base labels directory')
-    parser.add_argument('--class_dirs', nargs='+', required=True, help='List of class directories containing images and labels')
-    parser.add_argument('--output_images_dir', type=str, required=True, help='Path to the output images directory')
-    parser.add_argument('--output_labels_dir', type=str, required=True, help='Path to the output labels directory')
-    parser.add_argument('--iou_threshold', type=float, default=0.05, help='IoU threshold to determine overlap')
-    parser.add_argument('--max_attempts', type=int, default=50, help='Maximum attempts to find suitable images')
+    parser = argparse.ArgumentParser(description="Data augmentation script.")
+
+    parser.add_argument(
+        "--data_root", type=str, help="Path to the data root with images and labels"
+    )
+
+    parser.add_argument(
+        "--save_root",
+        type=str,
+        help="Path to folder to save the augmented images and labels",
+    )
+
+    parser.add_argument(
+        "--class_dirs",
+        nargs="+",
+        required=True,
+        help="List of class directories containing images and labels",
+    )
+
+    parser.add_argument(
+        "--iou_threshold",
+        type=float,
+        default=0.05,
+        help="IoU threshold to determine overlap",
+    )
+    parser.add_argument(
+        "--max_attempts",
+        type=int,
+        default=50,
+        help="Maximum attempts to find suitable images",
+    )
 
     args = parser.parse_args()
 
-    os.makedirs(args.output_images_dir, exist_ok=True)
-    os.makedirs(args.output_labels_dir, exist_ok=True)
+    data_root = args.data_root
+    base_image_dir = os.path.join(data_root, "images")
+    base_label_dir = os.path.join(data_root, "labels")
 
-    for image_name in os.listdir(args.base_images_dir):
-        if not image_name.lower().endswith(('.jpg', '.jpeg', '.png')):
+    save_root = args.save_root
+    output_image_dir = os.path.join(save_root, "images")
+    output_label_dir = os.path.join(save_root, "labels")
+    os.makedirs(save_root, exist_ok=True)
+    os.makedirs(output_image_dir, exist_ok=True)
+    os.makedirs(output_label_dir, exist_ok=True)
+
+    for image_name in os.listdir(base_image_dir):
+        if not image_name.lower().endswith((".jpg", ".jpeg", ".png")):
             continue  # Skip non-image files
 
-        base_image_path = os.path.join(args.base_images_dir, image_name)
-        base_label_path = os.path.join(args.base_labels_dir, os.path.splitext(image_name)[0] + '.txt')
-        output_image_path = os.path.join(args.output_images_dir, image_name)
-        output_label_path = os.path.join(args.output_labels_dir, os.path.splitext(image_name)[0] + '.txt')
+        base_image_path = os.path.join(base_image_dir, image_name)
+        base_label_path = os.path.join(
+            base_label_dir, os.path.splitext(image_name)[0] + ".txt"
+        )
+        output_image_path = os.path.join(output_image_dir, image_name)
+        output_label_path = os.path.join(
+            output_label_dir, os.path.splitext(image_name)[0] + ".txt"
+        )
 
         print(f"Processing base image: {image_name}")
         augment_image(
@@ -269,11 +352,12 @@ def main():
             output_image_path,
             output_label_path,
             iou_threshold=args.iou_threshold,
-            max_attempts=args.max_attempts
+            max_attempts=args.max_attempts,
         )
         print("-" * 50)
 
     print("Data augmentation completed.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
