@@ -18,8 +18,11 @@ from src.utils.yolo_utils import visualize_images
 def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
     parser.add_argument("--img_dir", type=str, default="public_test")
+
+    parser.add_argument("--conf", type=float, default=0.01)
+    parser.add_argument("--iou", type=float, default=0.7)
     parser.add_argument(
-        "--vehicle_model_path", type=str, default="weights/vehicle/epoch40.pt"
+        "--vehicle_model_path", type=str, default="weights/vehicle/epoch_best.pt"
     )
     parser.add_argument(
         "--daynight_model_path", type=str, default="weights/day_night/best.pt"
@@ -118,7 +121,9 @@ if __name__ == "__main__":
         else:
             image = light_enhancer.enhance_image(image)
 
-        detections = infer_detect(vehicle_model, image)
+        detections = infer_detect(
+            model=vehicle_model, source=image, conf=args.conf, iou=args.iou
+        )
 
         if len(detections.boxes) == 0:
             continue

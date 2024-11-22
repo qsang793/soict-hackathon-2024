@@ -3,8 +3,9 @@
 import torch
 from ultralytics import YOLO
 
-import wandb
-from wandb.integration.ultralytics import add_wandb_callback
+
+# import wandb
+# from wandb.integration.ultralytics import add_wandb_callback
 
 
 ## Config
@@ -15,21 +16,21 @@ run_name = "run_0"
 pretrain_weight = "pretrained/yolov9e.pt"
 data_yaml = "src/src_train/data-detection/data_train.yaml"
 
-epochs = 500
+epochs = 10
 batch_size = 4
 
 patience = 500
 cos_lr = False
 
-device = [0, 1]
-workers = 8
+device = [0]
+workers = 2
 
 resume = False
 plots = False
 
 ## Init model
 model = YOLO(pretrain_weight)
-add_wandb_callback(model)
+# add_wandb_callback(model)
 
 ## Train
 torch.cuda.empty_cache()
@@ -48,4 +49,4 @@ results = model.train(
     plots=plots,
 )
 
-wandb.finish()
+# wandb.finish()

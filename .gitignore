@@ -175,9 +175,8 @@ wandb/
 *.pt
 *.pth
 runs/
-
+demo_data/
 # ignore all images
 *.jpg
 *.jpeg
 *.png
-*.txt
