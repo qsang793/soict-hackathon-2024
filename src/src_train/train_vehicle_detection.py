@@ -16,7 +16,7 @@ pretrain_weight = "pretrained/yolov9e.pt"
 data_yaml = "src/src_train/data-detection/data_train.yaml"
 
 epochs = 500
-batch_size = 32
+batch_size = 4
 
 patience = 500
 cos_lr = False

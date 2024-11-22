@@ -15,7 +15,7 @@ pretrain_weight = "weights/pretrained/yolo11x-cls.pt"
 data_dir = "data_day_time"
 
 epochs = 100
-batch_size = 32
+batch_size = 4
 
 device = [0]
 workers = 8
