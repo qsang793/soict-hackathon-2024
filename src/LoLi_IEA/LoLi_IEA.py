@@ -122,15 +122,21 @@ class LoLi_IEA:
         # Load models
         self.modelClass = Classification().to(self.device)
         self.modelClass.load_state_dict(
-            torch.load(os.path.join(model_dir, "CLASSIFICATION.pt"))
+            torch.load(
+                os.path.join(model_dir, "CLASSIFICATION.pt"), map_location=device
+            )
         )
 
         self.modelValL = Enhance().to(self.device)
-        self.modelValL.load_state_dict(torch.load(os.path.join(model_dir, "LOCAL.pt")))
+        self.modelValL.load_state_dict(
+            torch.load(os.path.join(model_dir, "LOCAL.pt"), map_location=device)
+        )
         self.modelValL.eval()
 
         self.modelValG = Enhance().to(self.device)
-        self.modelValG.load_state_dict(torch.load(os.path.join(model_dir, "GLOBAL.pt")))
+        self.modelValG.load_state_dict(
+            torch.load(os.path.join(model_dir, "GLOBAL.pt"), map_location=device)
+        )
         self.modelValG.eval()
 
     def enhance_image(self, image):

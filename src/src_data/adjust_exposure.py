@@ -1,5 +1,6 @@
 """This script is used to adjust the exposure by applying gamma correction."""
 
+import argparse
 import os
 import random
 import shutil
@@ -7,6 +8,17 @@ import shutil
 import cv2
 import numpy as np
 from tqdm import tqdm
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Adjust Exposure Script")
+    parser.add_argument(
+        "--data_root", type=str, help="Path to the data root with images and labels"
+    )
+    parser.add_argument(
+        "--save_root", type=str, help="Path to folder to save the adjusted images"
+    )
+    return parser.parse_args()
 
 
 def adjust_gamma(image, gamma):
@@ -21,11 +33,13 @@ def adjust_gamma(image, gamma):
 
 
 if __name__ == "__main__":
-    data_root = r"D:\Project\SoICT2024\data\data_final\cam_10\train"
+    args = parse_arguments()
+
+    data_root = args.data_root
     image_dir = os.path.join(data_root, "images")
     label_dir = os.path.join(data_root, "labels")
 
-    save_root = r"D:\Project\SoICT2024\data\data_final\cam_10\train_gamma"
+    save_root = args.save_root
     save_image_dir = os.path.join(save_root, "images")
     save_label_dir = os.path.join(save_root, "labels")
 

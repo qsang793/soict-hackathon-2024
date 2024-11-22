@@ -1,0 +1,12 @@
+## Data
+train: training_data/train
+val: /home/manhckv/manhckv/soict/__data/data_hack/val
+
+# Classes
+nc: 4
+names: ['motorbike', 'car', 'coach', 'truck']
+
+# Nhãn 0: xe máy
+# Nhãn 1: xe ô tô con
+# Nhãn 2: Xe vận tải du lịch (xe khách)
+# Nhãn 3: Xe vận tải container

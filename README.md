@@ -22,3 +22,15 @@
 
 - Docker copy
 `docker cp 2399eae3124d:/src/predict.txt . `
+
+- Install NAFNET
+```bash
+cd NAFNet
+python3 setup.py develop --no_cuda_ext
+cd ..
+```
+
+- Run remove motorbike
+```bash
+python src/src_data/object_removal/remove_motorbike.py --data_root demo_data --save_root __test
+```

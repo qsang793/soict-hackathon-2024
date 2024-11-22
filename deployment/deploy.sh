@@ -8,14 +8,6 @@ build() {
     docker rmi $(docker images --format "{{.Repository}}:{{.Tag}}" | grep "$IMAGE_VERSION-old")
 }
 
-up () {
-    docker compose -f ./deployment/docker-compose.yml up -d infer
-}
-
-down () {
-    docker compose -f ./deployment/docker-compose.yml down
-}
-
 shift
 
 case $cmd in

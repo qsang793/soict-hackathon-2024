@@ -1,3 +1,6 @@
+"""This script is used to fix the class labels for nighttime images."""
+
+import argparse
 import os
 
 from tqdm import tqdm
@@ -9,6 +12,14 @@ REMAP_NIGHT_CLASSES = {
     6: 2,
     7: 3,
 }
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Fix Nighttime Class Script")
+    parser.add_argument(
+        "--data_root", type=str, help="Path to the data root with images and labels"
+    )
+    return parser.parse_args()
 
 
 def fix_night_class(label_path):
@@ -23,7 +34,9 @@ def fix_night_class(label_path):
 
 
 if __name__ == "__main__":
-    data_root = r"data\data_train\nighttime"
+    args = parse_arguments()
+
+    data_root = args.data_root
     images_dir = os.path.join(data_root, "images")
     labels_dir = os.path.join(data_root, "labels")
 

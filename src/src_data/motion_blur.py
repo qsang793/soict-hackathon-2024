@@ -1,5 +1,6 @@
 """This script applies vertical motion blur to vehicles in traffic images."""
 
+import argparse
 import os
 import shutil
 
@@ -14,6 +15,17 @@ CLASSES_MAP = {
     2: "coach",
     3: "truck",
 }
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Motion Blur Script")
+    parser.add_argument(
+        "--data_root", type=str, help="Path to the data root with images and labels"
+    )
+    parser.add_argument(
+        "--save_root", type=str, help="Path to folder to save the adjusted images"
+    )
+    return parser.parse_args()
 
 
 def convert_yolo_to_xyxy(bbox, img_shape):
@@ -50,7 +62,6 @@ def calculate_blur_params(bbox, image_height=720):
     Args:
         bbox: Tuple of (x1, y1, x2, y2) in xyxy format
         image_height: Height of the image (720p)
-        camera_y: Y-coordinate of the camera position
 
     Returns:
         kernel_size: Size of the motion blur kernel
@@ -121,11 +132,13 @@ def augment_traffic_image(image, bboxes, labels):
 
 
 if __name__ == "__main__":
-    data_root = r"D:\Project\SoICT2024\data\data_final\cam_08\train"
+    args = parse_arguments()
+
+    data_root = args.data_root
     image_dir = os.path.join(data_root, "images")
     label_dir = os.path.join(data_root, "labels")
 
-    save_root = r"D:\Project\SoICT2024\data\data_final\cam_08\train_motion_blur"
+    save_root = args.save_root
     save_image_dir = os.path.join(save_root, "images")
     save_label_dir = os.path.join(save_root, "labels")
 
