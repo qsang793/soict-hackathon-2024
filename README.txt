@@ -21,7 +21,7 @@ bash scripts/install_NAFNet.sh
 python3 src/src_infer/infer_pipeline.py
 ```
 
-- Kết quả sẽ được lưu vào file "src/predict.txt". Để copy kết quả ra khỏi docker, bạn cần phải chạy lệnh sau:
+- Kết quả sẽ được lưu vào file "src/predict.txt". Để copy kết quả ra khỏi docker, bạn cần phải chạy lệnh sau (chay lệnh này ở terminal khác, không phải trong docker):
 ```
 docker cp <container_id>:/src/predict.txt .
 ```
@@ -35,6 +35,8 @@ docker cp 2399eae3124d:/src/predict.txt .
 - Lúc này, kết quả sẽ được lưu vào file "predict.txt" ở thư mục hiện tại.
 
 3. Augmentation data
+
+- Ở trong container hiện tại, team đã có sẵn dữ liệu demo để chạy augmentation data. Dữ liệu demo nằm ở thư mục "demo_data". Để chạy augmentation data, bạn cần phải chạy các bước sau:
 
 - Để chạy bước điều chỉnh độ sáng, bạn cần phải chạy lệnh sau. Sau khi chạy xong, kết quả sẽ được lưu vào thư mục "__adjust_exposure":
 ```
@@ -62,12 +64,12 @@ bash src/src_data/copy_paste/run_copy_paste.sh
 ```
 
 4. Train model
-- Để train model, bạn cần phải chạy docker với lệnh sau:
+- Để train model, bạn cần phải chạy docker với lệnh sau (cần có GPU):
 ```
-docker run -it --runtime=nvidia --gpus all --shm-size=2g manhckv/test:latest
+docker run -it --runtime=nvidia --gpus all --shm-size=2G manhckv/test:latest
 ```
 
-- Đầu tiên, cần chạy lệnh sau để tải dữ liệu training vehicle detection và day-night classification:
+- Đầu tiên, cần chạy lệnh sau để tải dữ liệu training vehicle detection và day-night classification (cần có kết nối internet):
 ```
 bash scripts/download_data.sh
 ```

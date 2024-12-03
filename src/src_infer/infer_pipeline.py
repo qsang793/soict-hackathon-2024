@@ -17,10 +17,10 @@ from src.utils.yolo_utils import visualize_images
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="YOLO Inference Script")
-    parser.add_argument("--img_dir", type=str, default="public_test")
+    parser.add_argument("--img_dir", type=str, default="private_test")
 
-    parser.add_argument("--conf", type=float, default=0.01)
-    parser.add_argument("--iou", type=float, default=0.7)
+    parser.add_argument("--conf", type=float, default=0.65)
+    parser.add_argument("--iou", type=float, default=0.5)
     parser.add_argument(
         "--vehicle_model_path", type=str, default="weights/vehicle/epoch_best.pt"
     )
