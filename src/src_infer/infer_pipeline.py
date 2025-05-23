@@ -1,5 +1,9 @@
 import argparse
 import os
+import sys
+
+# Add parent directory to system path to find the LoLi_IEA module
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import cv2
 import numpy as np
@@ -11,8 +15,9 @@ from basicsr.utils.options import parse
 from tqdm import tqdm
 from ultralytics import YOLO
 
-from src.LoLi_IEA.LoLi_IEA import LoLi_IEA
-from src.utils.yolo_utils import visualize_images
+# Now the imports should work
+from LoLi_IEA.LoLi_IEA import LoLi_IEA
+from utils.yolo_utils import visualize_images
 
 
 def parse_arguments():
@@ -111,38 +116,40 @@ if __name__ == "__main__":
     ## Inferencing ---------------------------------------------------
     results = []
     for img_name in tqdm(os.listdir(img_dir), desc="Inferencing"):
-        img_path = os.path.join(img_dir, img_name)
-        image = cv2.imread(img_path)
+        if img_name.endswith(".png") or img_name.endswith(".jpg"):
+            img_path = os.path.join(img_dir, img_name)
+            image = cv2.imread(img_path)
 
-        day_night_cls = infer_classify(daynight_model, image)
+            day_night_cls = infer_classify(daynight_model, image)
 
-        if day_night_cls == 0:
-            image = deblur(NAFNet, image)
-        else:
-            image = light_enhancer.enhance_image(image)
-
-        detections = infer_detect(
-            model=vehicle_model, source=image, conf=args.conf, iou=args.iou
-        )
-
-        if len(detections.boxes) == 0:
-            continue
-
-        boxes = detections.boxes.xyxy.cpu().numpy()
-        boxes_xywhn = detections.boxes.xywhn.cpu().numpy()
-        labels = detections.boxes.cls.cpu().tolist()
-        scores = detections.boxes.conf.cpu().tolist()
-
-        for box, label, score in zip(boxes_xywhn, labels, scores):
-            result = (
-                f"{img_name} {int(label)} {box[0]} {box[1]} {box[2]} {box[3]} {score}"
+            if day_night_cls == 0:
+                image = deblur(NAFNet, image)
+            else:
+                image = light_enhancer.enhance_image(image)
+            
+            detections = infer_detect(
+                model=vehicle_model, source=image, conf=args.conf, iou=args.iou
             )
-            results.append(result)
 
-        if args.vis:
-            visualized_img = visualize_images(image, boxes, labels)
-            save_path = os.path.join(visualized_dir, img_name)
-            cv2.imwrite(save_path, visualized_img)
+            if len(detections.boxes) == 0:
+                continue
+
+            boxes = detections.boxes.xyxy.cpu().numpy()
+            boxes_xywhn = detections.boxes.xywhn.cpu().numpy()
+            labels = detections.boxes.cls.cpu().tolist()
+            scores = detections.boxes.conf.cpu().tolist()
+
+            for box, label, score in zip(boxes_xywhn, labels, scores):
+                result = (
+                    f"{img_name} {int(label)} {box[0]} {box[1]} {box[2]} {box[3]} {score}"
+                )
+                results.append(result)
+
+            if args.vis:
+                visualized_img = visualize_images(image, boxes, labels)
+                save_path = os.path.join(visualized_dir, img_name)
+                cv2.imwrite(save_path, visualized_img)
+        
 
     ## Save results to file
     with open(output_path, "w") as f:

@@ -180,3 +180,15 @@ demo_data/
 *.jpg
 *.jpeg
 *.png
+
+# ignore all videos
+*.mp4
+
+# ignore all csv files
+*.csv
+
+# ignore tensorRT files
+*.engine
+
+#ignore onnx files
+*.onnx
