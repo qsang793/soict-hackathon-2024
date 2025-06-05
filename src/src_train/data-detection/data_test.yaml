@@ -1,0 +1,13 @@
+## Data
+train: 
+val: /home/manhckv/vm7608/soict/__data/test/all
+test: /home/manhckv/vm7608/soict/__data/test/all
+
+# Classes
+nc: 4
+names: ['motorbike', 'car', 'coach', 'truck']
+
+# Nhãn 0: xe máy
+# Nhãn 1: xe ô tô con
+# Nhãn 2: Xe vận tải du lịch (xe khách)
+# Nhãn 3: Xe vận tải container

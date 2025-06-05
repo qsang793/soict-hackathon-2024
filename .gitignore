@@ -174,12 +174,17 @@ wandb/
 # ignore all .pt files
 *.pt
 *.pth
+*.engine
+*.onnx
+
 runs/
 demo_data/
-# ignore all images
+
 *.jpg
 *.jpeg
 *.png
+*.txt
+*.mp4
 
 # ignore all videos
 *.mp4
@@ -192,3 +197,5 @@ demo_data/
 
 #ignore onnx files
 *.onnx
+
+datasets

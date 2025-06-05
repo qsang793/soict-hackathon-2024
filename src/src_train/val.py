@@ -2,13 +2,11 @@ from ultralytics import YOLO
 
 
 ## Config
-weight_path = (
-    "/home/manhckv/manhckv/soict/SOICT2024-VEHICLE-DETECTION/run_2/weights/best.pt"
-)
-data_yaml = "/home/manhckv/manhckv/soict/src/data-yaml/data_train.yaml"
+weight_path = "/home/manhckv/vm7608/soict/weights/vehicle/best_private.pt"
+data_yaml = "/home/manhckv/vm7608/soict/src/src_train/data-detection/data_test.yaml"
 
 device = [0]
-batch_size = 4
+batch_size = 16
 conf = 0.001
 iou = 0.6
 
