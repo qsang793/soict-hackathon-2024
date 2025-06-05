@@ -34,15 +34,15 @@ if __name__ == "__main__":
 
     save_root = args.save_root
     save_image_dir = os.path.join(save_root, "images")
-    save_label_dir = os.path.join(save_root, "labels")
+    # save_label_dir = os.path.join(save_root, "labels")
 
     os.makedirs(save_root, exist_ok=True)
     os.makedirs(save_image_dir, exist_ok=True)
-    os.makedirs(save_label_dir, exist_ok=True)
+    # os.makedirs(save_label_dir, exist_ok=True)
 
     for image_name in tqdm(os.listdir(image_dir)):
         image_path = os.path.join(image_dir, image_name)
-        label_path = os.path.join(label_dir, image_name.replace(".jpg", ".txt"))
+        # label_path = os.path.join(label_dir, image_name.replace(".jpg", ".txt"))
 
         adjusted = convert_to_grayscale(image_path)
 
@@ -50,9 +50,9 @@ if __name__ == "__main__":
             save_image_dir, image_name.replace(".jpg", "_grayscale.jpg")
         )
 
-        save_label_path = os.path.join(
-            save_label_dir, image_name.replace(".jpg", "_grayscale.txt")
-        )
+        # save_label_path = os.path.join(
+        #     save_label_dir, image_name.replace(".jpg", "_grayscale.txt")
+        # )
 
         cv2.imwrite(save_image_path, adjusted)
-        shutil.copy(label_path, save_label_path)
+        # shutil.copy(label_path, save_label_path)
