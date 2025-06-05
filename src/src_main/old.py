@@ -8,7 +8,6 @@ import cv2
 import numpy as np
 import torch
 from tqdm import tqdm
-import json
 
 # Import our modular components
 from models.detector import VehicleDetector
@@ -537,52 +536,13 @@ class TrafficViolationSystem:
                 track_id, cls, x1, y1, x2, y2, conf, speed, is_violation = det
                 f.write(f"{frame_count},{track_id},{cls},{x1},{y1},{x2},{y2},{conf},{speed},{1 if is_violation else 0}\n")
                 
-        # Output real-time data for streaming (if enabled)
-        if hasattr(self.args, 'realtime_output') and self.args.realtime_output:
-            current_violations = len([det for det in detections if det[8]])  # Count violations in this frame
-            current_detections = len(detections)
-            
-            realtime_data = {
-                'frame': frame_count,
-                'detections': current_detections,
-                'violations': self.violation_count,
-                'current_violations': current_violations,
-                'timestamp': time.time()
-            }
-            
-            # Print JSON data that the backend can parse
-            print(f"REALTIME_DATA: {json.dumps(realtime_data)}")
-            sys.stdout.flush()  # Ensure immediate output
-                
     def _save_preview_frame_if_needed(self, frame, frame_count):
         """Save preview frames at intervals if enabled"""
         if self.args.save_preview_frames > 0 and frame_count % self.args.save_preview_frames == 0:
-            # Use the output folder structure that backend expects
-            if hasattr(self.args, 'output_video') and self.args.output_video:
-                # Extract the output directory from output_video path
-                output_dir = os.path.dirname(self.args.output_video)
-                preview_dir = os.path.join(output_dir, "preview_frames")
-            else:
-                # Fallback to local preview_frames directory
-                preview_dir = "preview_frames"
-            
+            preview_dir = "preview_frames"
             os.makedirs(preview_dir, exist_ok=True)
             preview_path = os.path.join(preview_dir, f"frame_{frame_count:06d}.jpg")
-            
-            # Save with higher quality for better streaming
-            cv2.imwrite(preview_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-            
-            # Also save to a 'latest' frame for easier access
-            latest_path = os.path.join(preview_dir, "latest_frame.jpg")
-            cv2.imwrite(latest_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-            
-            if self.args.debug:
-                print(f"Preview frame saved: {preview_path}")
-                
-            # Output debug info about frame saving
-            if hasattr(self.args, 'realtime_output') and self.args.realtime_output:
-                print(f"FRAME_SAVED: {preview_path}")
-                sys.stdout.flush()
+            cv2.imwrite(preview_path, frame)
                 
     def process_image_directory(self):
         """Process images from a directory instead of video"""
@@ -742,9 +702,6 @@ def parse_arguments():
     parser.add_argument("--half_precision", action="store_true", help="Use FP16 for TensorRT (further acceleration)")
     parser.add_argument("--tensorrt_workspace", type=int, default=8, help="Workspace limit (GB) for TensorRT")
     parser.add_argument("--tensorrt_dynamic", action="store_true", help="Use dynamic batch size for TensorRT")
-    
-    # Real-time output for streaming
-    parser.add_argument("--realtime_output", action="store_true", help="Enable real-time data output for streaming")
     
     return parser.parse_args()
 
