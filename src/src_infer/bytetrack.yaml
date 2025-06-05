@@ -1,0 +1,7 @@
+# Create a file named 'traffic_tracker.yaml' with these contents:
+tracker_type: bytetrack
+track_high_thresh: 0.7  # Higher confidence threshold for track creation
+track_low_thresh: 0.1   # Lower threshold for track maintenance
+new_track_thresh: 0.7   # Higher threshold for creating new tracks
+track_buffer: 60        # Longer buffer to maintain tracks through occlusions
+match_thresh: 0.9       # Higher threshold for feature matching

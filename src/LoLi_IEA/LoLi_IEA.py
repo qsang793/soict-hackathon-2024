@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import torchvision.transforms as transforms
 from PIL import Image
 
-from src.LoLi_IEA.colorSpace import HsvToRgb, RgbToHsv
+from LoLi_IEA.colorSpace import HsvToRgb, RgbToHsv
 
 
 torch.backends.cudnn.deterministic = True

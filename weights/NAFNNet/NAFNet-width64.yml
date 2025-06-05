@@ -34,7 +34,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: weights/NAFNNet/NAFNet-REDS-width64.pth
+  pretrain_network_g: /home/quangsang/Study/maiAnhEm/soict-hackathon-2024/weights/NAFNNet/NAFNet-REDS-width64.pth
   strict_load_g: true
   resume_state: ~
 
