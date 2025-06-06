@@ -17,15 +17,15 @@ python /home/quangsang/Study/maiAnhEm/soict-hackathon-2024/src/src_main/traffic_
     --min_pixel_percentage 0.02 \
     --debug
 
-python /home/quangsang/Study/maiAnhEm/soict-hackathon-2024/src/src_main/old.py \
+python /home/quangsang/Study/maiAnhEm/soict-hackathon-2024/src/src_main/traffic_violation_detector.py \
     --input /home/quangsang/Study/data/0006_cut.mp4 \
     --output_video result_violation.mp4 \
     --output_data violations_data.csv \
     --detection_method combined \
-    --stop_line 385,348,858,355 \
-    --green_zone 121,710,378,361,876,373,1069,704 \
-    --red_zone 853,338,772,134,494,131,343,337 \
-    --traffic_light_bbox 717,34,802,84 \
+    --traffic_light_bbox 547,43,629,82 \
+    --stop_line 391,363,916,375 \
+    --green_zone 384,377,936,386,1150,713,164,716 \
+    --red_zone 397,350,911,362,864,244,910,127,397,137,377,272 \
     --min_frames_in_green 5 \
     --trajectory_interpolation 15 \
     --tolerance 20 \
