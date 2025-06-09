@@ -9,7 +9,7 @@ echo "🚀 Running Traffic Violation Detector with VLM License Plate Extraction"
 export GEMINI_API_KEY="AIzaSyDSF1qp4vK5AkAIKwO1_3kkaolkLxRomVU"
 
 # Input video
-VIDEO_PATH="/home/quangsang/Study/data/0006_cut.mp4"
+VIDEO_PATH="/home/quangsang/Study/data/0006_cut_1080.mov"
 
 # Run the enhanced detector (same as original + VLM background processing)
 python traffic_violation_detector_with_vlm.py \
@@ -25,10 +25,10 @@ python traffic_violation_detector_with_vlm.py \
     --vlm_batch_size 3 \
     --debug \
     --detection_method combined \
-    --traffic_light_bbox 547,43,629,82 \
-    --stop_line 391,363,916,375 \
-    --green_zone 384,377,936,386,1150,713,164,716 \
-    --red_zone 397,350,911,362,864,244,910,127,397,137,377,272 \
+    --traffic_light_bbox 825,70,954,122 \
+    --stop_line 614,552,1364,568 \
+    --green_zone 601,568,1387,584,1710,1066,289,1069 \
+    --red_zone 619,539,1362,552,1349,221,581,214 \
     --min_frames_in_green 5 \
     --trajectory_interpolation 15 \
     --tolerance 20 \
@@ -36,6 +36,18 @@ python traffic_violation_detector_with_vlm.py \
     --min_pixel_percentage 0.02 \
     --max_dimension 1920
 
+# green_zone
+# : 
+# (8) [601, 568, 1387, 584, 1710, 1066, 289, 1069]
+# red_zone
+# : 
+# (8) [619, 539, 1362, 552, 1349, 221, 581, 214]
+# stop_line
+# : 
+# (4) [614, 552, 1364, 568]
+# traffic_light_bbox
+# : 
+# (4) [825, 70, 954, 122]
 
 echo "✅ Processing completed!"
 echo "📁 Output files:"

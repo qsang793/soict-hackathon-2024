@@ -608,8 +608,8 @@ class TrafficViolationSystem:
             latest_path = os.path.join(preview_dir, "latest_frame.jpg")
             cv2.imwrite(latest_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
             
-            if self.args.debug:
-                print(f"Preview frame saved: {preview_path}")
+            # if self.args.debug:
+            #     print(f"Preview frame saved: {preview_path}")
                 
             # Output debug info about frame saving
             if hasattr(self.args, 'realtime_output') and self.args.realtime_output:
