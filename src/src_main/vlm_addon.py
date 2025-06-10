@@ -35,7 +35,7 @@ class SimpleVLMProcessor:
     Simple background VLM processor that doesn't affect main detection performance
     """
     
-    def __init__(self, api_key: str = None, batch_size: int = 5, enabled: bool = True):
+    def __init__(self, api_key: str = None, batch_size: int = 5, enabled: bool = True, output_dir: str = "violation_images"):
         """
         Initialize VLM processor
         
@@ -43,6 +43,7 @@ class SimpleVLMProcessor:
             api_key: Gemini API key
             batch_size: Number of images to process in one batch
             enabled: Whether to enable VLM processing
+            output_dir: Directory to save violation images
         """
         self.enabled = enabled and VLM_AVAILABLE
         
@@ -54,7 +55,7 @@ class SimpleVLMProcessor:
         self.batch_size = batch_size
         
         # Create output directory
-        self.output_dir = "violation_images"
+        self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
         
         # Initialize VLM client
@@ -161,33 +162,22 @@ class SimpleVLMProcessor:
     
     def _background_processor(self):
         """Background thread for processing violations"""
-        current_batch = []
-        
-        while self.running:
+        while self.running or not self.queue.empty():
+            current_batch = []
             try:
-                # Try to get item with timeout
-                try:
-                    item = self.queue.get(timeout=5)  # 5 second timeout
+                # Build a batch up to batch_size
+                while len(current_batch) < self.batch_size:
+                    item = self.queue.get(timeout=1) # Wait for 1 second
                     current_batch.append(item)
-                except:
-                    # Timeout - process incomplete batch if exists
-                    if current_batch:
-                        self._process_batch(current_batch)
-                        current_batch = []
-                    continue
-                
-                # Process when batch is full
-                if len(current_batch) >= self.batch_size:
-                    self._process_batch(current_batch)
-                    current_batch = []
-                    
-            except Exception as e:
-                print(f"❌ VLM background error: {e}")
-                time.sleep(1)
-        
-        # Process remaining items
-        if current_batch:
-            self._process_batch(current_batch)
+            except Exception: # Queue empty or timeout
+                pass
+
+            if current_batch:
+                self._process_batch(current_batch)
+            
+            # If not running and queue is empty, we can exit the thread
+            if not self.running and self.queue.empty():
+                break
     
     def _process_batch(self, batch):
         """Process a batch of violations"""
@@ -227,6 +217,8 @@ class SimpleVLMProcessor:
             
             for item, result in zip(batch, results):
                 track_id = item['track_id']
+                frame_count = item['frame_count']
+                image_filename = os.path.basename(item['image_path'])
                 
                 self.results[track_id] = {
                     'license_plate': result.get('license_plate'),
@@ -237,8 +229,15 @@ class SimpleVLMProcessor:
                 }
                 
                 plate = result.get('license_plate', 'Not detected')
-                print(f"🚗 Vehicle {track_id}: {plate}")
-                
+                vlm_data = {
+                    'track_id': track_id,
+                    'frame_count': frame_count,
+                    'license_plate': plate,
+                    'image_filename': image_filename
+                }
+                print(f"VLM_RESULT: {json.dumps(vlm_data)}")
+                sys.stdout.flush()
+
         except Exception as e:
             print(f"❌ Error storing VLM results: {e}")
     
@@ -280,12 +279,13 @@ class SimpleVLMProcessor:
         print(f"🔍 License plates found: {plates_found}")
     
     def stop(self):
-        """Stop background processing"""
+        """Stop background processing and wait for queue to empty"""
         if self.enabled and self.running:
+            print("🛑 VLM shutting down, waiting for all violations to be processed...")
             self.running = False
             if self.processing_thread:
-                self.processing_thread.join(timeout=5)
-            print("🛑 VLM processing stopped")
+                self.processing_thread.join(timeout=60) # Wait up to 60s for remaining API calls
+            print("🛑 VLM processing stopped.")
 
 
 # Simple integration function

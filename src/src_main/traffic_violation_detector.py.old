@@ -17,9 +17,6 @@ from utils.visualization import Visualizer
 from violations.factory import ViolationDetectorFactory
 from traffic_light_detector import TrafficLightDetector
 
-# Import VLM addon
-from vlm_addon import SimpleVLMProcessor
-
 # Import enhancement models from original code (if needed)
 # from LoLi_IEA.LoLi_IEA import LoLi_IEA
 # from basicsr.models import create_model
@@ -66,13 +63,6 @@ class TrafficViolationSystem:
             print(f"Traffic light detection enabled with bbox: {self.traffic_light_bbox}")
         else:
             print("Traffic light detection disabled - no bounding box provided")
-        
-        # Initialize VLM processor (runs in background, doesn't affect performance)
-        self.vlm_processor = SimpleVLMProcessor(
-            api_key=getattr(args, 'vlm_api_key', None) or os.getenv("GEMINI_API_KEY"),
-            batch_size=getattr(args, 'vlm_batch_size', 5),
-            enabled=getattr(args, 'enable_vlm', True)
-        )
         
     def _setup_device(self):
         """Configure computing device based on arguments"""
@@ -377,12 +367,6 @@ class TrafficViolationSystem:
             
             print(f"Total violations detected: {self.violation_count}")
             
-            # Export VLM results
-            if hasattr(self, 'vlm_processor') and self.vlm_processor.enabled:
-                print("📄 Exporting VLM results...")
-                self.vlm_processor.export_report("violations_with_plates.json")
-                self.vlm_processor.stop()
-            
         except Exception as e:
             print(f"Error processing video: {e}")
             import traceback
@@ -454,22 +438,6 @@ class TrafficViolationSystem:
                         if self.args.debug:
                             print(f"🚨 VIOLATION DETECTED! Vehicle {track_id}, frame {frame_count}, " 
                                 f"type: {violation_info.get('violation_type', 'unknown')}")
-                        
-                        # Add to VLM processing (non-blocking, runs in background)
-                        # Convert bbox to list format [x1, y1, x2, y2]
-                        bbox = det["box"]
-                        if hasattr(bbox, 'tolist'):  # If it's numpy array
-                            bbox = bbox.tolist()
-                        elif not isinstance(bbox, list):  # If it's tuple or other
-                            bbox = list(bbox)
-                            
-                        self.vlm_processor.add_violation(
-                            frame=frame,
-                            bbox=bbox,
-                            track_id=track_id,
-                            frame_count=frame_count,
-                            violation_info=violation_info
-                        )
                         break
         
         # Step 5: Create formatted detection data for output
@@ -608,8 +576,8 @@ class TrafficViolationSystem:
             latest_path = os.path.join(preview_dir, "latest_frame.jpg")
             cv2.imwrite(latest_path, frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
             
-            # if self.args.debug:
-            #     print(f"Preview frame saved: {preview_path}")
+            if self.args.debug:
+                print(f"Preview frame saved: {preview_path}")
                 
             # Output debug info about frame saving
             if hasattr(self.args, 'realtime_output') and self.args.realtime_output:
@@ -777,11 +745,6 @@ def parse_arguments():
     
     # Real-time output for streaming
     parser.add_argument("--realtime_output", action="store_true", help="Enable real-time data output for streaming")
-    
-    # VLM parameters
-    parser.add_argument("--enable_vlm", action="store_true", help="Enable license plate extraction using VLM")
-    parser.add_argument("--vlm_api_key", type=str, help="Gemini API key for VLM (or use GEMINI_API_KEY env var)")
-    parser.add_argument("--vlm_batch_size", type=int, default=5, help="VLM batch size for processing")
     
     return parser.parse_args()
 
