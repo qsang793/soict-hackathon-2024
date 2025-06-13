@@ -32,7 +32,7 @@ python /home/quangsang/Study/maiAnhEm/soict-hackathon-2024/src/src_main/traffic_
     --save_preview_frames 10 \
     --min_pixel_percentage 0.02 \
     --debug 
-
+nv
 python /home/quangsang/Study/maiAnhEm/soict-hackathon-2024/src/src_main/traffic_violation_detector.py \
     --input /home/quangsang/Study/PBL6-Traffice-Surveillance/backend/uploads/videos/38213424-cea2-4689-b4b1-37112c836572.mov \
     --output_video /home/quangsang/Study/PBL6-Traffice-Surveillance/backend/uploads/processed/38213424-cea2-4689-b4b1-37112c836572/result_violation.mp4 \

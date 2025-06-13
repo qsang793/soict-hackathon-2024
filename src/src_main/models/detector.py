@@ -1,5 +1,6 @@
 # models/detector.py
 
+import os
 import cv2
 import numpy as np
 import torch
@@ -10,7 +11,7 @@ class VehicleDetector:
     Vehicle detection class to encapsulate detection operations
     """
     def __init__(self, model_path, conf_threshold=0.65, iou_threshold=0.5, 
-                 device=None, use_tensorrt=False):
+                 device=None, args=None):
         """
         Initialize the vehicle detector
         
@@ -19,11 +20,12 @@ class VehicleDetector:
             conf_threshold: Confidence threshold for detections
             iou_threshold: IoU threshold for NMS
             device: Device to run inference on ('cuda' or 'cpu')
-            use_tensorrt: Whether to convert the model to TensorRT
+            args: Command line arguments containing TensorRT settings
         """
         self.model_path = model_path
         self.conf_threshold = conf_threshold
         self.iou_threshold = iou_threshold
+        self.args = args
         
         # Set device if not specified
         if device is None:
@@ -32,17 +34,74 @@ class VehicleDetector:
             self.device = device
             
         # Load model
-        self.model = self._load_model(use_tensorrt)
+        self.model = self._load_model()
         
-    def _load_model(self, use_tensorrt=False):
+    def _load_model(self):
         """Load the detection model with optional TensorRT conversion"""
-        model = YOLO(self.model_path, task="detect")
-        
+        use_tensorrt = getattr(self.args, 'use_tensorrt', False)
+
         if use_tensorrt and torch.cuda.is_available():
-            # TensorRT conversion would go here
-            # This is simplified - full implementation would check for engine files
-            print("TensorRT conversion not implemented in this example")
+            print("🚀 Attempting to use TensorRT for vehicle detection model...")
+            task = "detect"
             
+            # Construct engine path
+            basename = os.path.splitext(self.model_path)[0]
+            engine_path = f"{basename}_{task}.engine"
+            
+            # If engine file exists, load it
+            if os.path.exists(engine_path):
+                print(f"✅ Found existing TensorRT engine: {engine_path}. Verifying compatibility...")
+                try:
+                    model = YOLO(engine_path, task=task)
+                    # Verify the engine by running a dummy prediction
+                    _ = model.predict(np.zeros((640, 640, 3), dtype=np.uint8), verbose=False)
+                    print("✅ Engine is compatible and loaded successfully.")
+                    return model
+                except Exception as e:
+                    print(f"⚠️ Incompatible or corrupt TensorRT engine detected: {e}.")
+                    print(f"🗑️ Deleting invalid engine file: {engine_path}")
+                    try:
+                        os.remove(engine_path)
+                    except OSError as remove_error:
+                        print(f"🔥 Error deleting engine file: {remove_error}. Please delete it manually and restart.")
+                        # If we can't delete, we must fall back to PyTorch
+                        print("Falling back to PyTorch model.")
+                        return YOLO(self.model_path, task="detect")
+
+            # If engine file does not exist (or was just deleted), create it
+            print(f"🛠️ No TensorRT engine found. Converting {self.model_path} to TensorRT...")
+            model = YOLO(self.model_path, task=task)
+            
+            try:
+                model.export(
+                    format='engine', 
+                    half=getattr(self.args, 'half_precision', False), 
+                    workspace=getattr(self.args, 'tensorrt_workspace', 8), 
+                    device=self.device,
+                    dynamic=getattr(self.args, 'tensorrt_dynamic', False)
+                )
+                
+                # The exported file name is based on the original model name
+                default_export_path = self.model_path.replace('.pt', '.engine')
+                
+                # Rename to our standard format if needed
+                if os.path.exists(default_export_path) and default_export_path != engine_path:
+                    os.rename(default_export_path, engine_path)
+                    
+                if os.path.exists(engine_path):
+                    print(f"✅ Conversion successful. Engine saved at: {engine_path}")
+                    return YOLO(engine_path, task=task)
+                else:
+                    print(f"⚠️ TensorRT engine not found after conversion. Falling back to PyTorch model.")
+            
+            except Exception as e:
+                print(f"❌ Error converting model to TensorRT: {e}")
+                print("Falling back to PyTorch model.")
+                return model # Return original PyTorch model on failure
+
+        # Default: load PyTorch model
+        print("Using standard PyTorch model for vehicle detection.")
+        model = YOLO(self.model_path, task="detect")
         return model
         
     def detect(self, frame):

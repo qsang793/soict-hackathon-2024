@@ -95,7 +95,8 @@ class TrafficViolationSystem:
             conf_threshold=self.args.conf,
             iou_threshold=self.args.iou,
             device=self.device,
-            use_tensorrt=self.args.use_tensorrt
+            # Pass all arguments to the detector for more flexible setup
+            args=self.args
         )
         
     def _setup_tracker(self):

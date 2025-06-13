@@ -136,9 +136,9 @@ class SimpleVLMProcessor:
                 print(f"⚠️  Empty cropped image for violation {track_id}")
                 return
             
-            # Save cropped image
+            # Save cropped image with maximum quality
             image_path = os.path.join(self.output_dir, f"violation_{track_id}_{frame_count}.jpg")
-            cv2.imwrite(image_path, cropped)
+            cv2.imwrite(image_path, cropped, [cv2.IMWRITE_JPEG_QUALITY, 100])  # Chất lượng tối đa 100%
             
             # Add to processing queue (non-blocking)
             violation_data = {
@@ -233,6 +233,7 @@ class SimpleVLMProcessor:
                     'track_id': track_id,
                     'frame_count': frame_count,
                     'license_plate': plate,
+                    'vehicle_description': result.get('description'),
                     'image_filename': image_filename
                 }
                 print(f"VLM_RESULT: {json.dumps(vlm_data)}")
