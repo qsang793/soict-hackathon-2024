@@ -1,4 +1,53 @@
 {
-  "total_violations": 0,
-  "violations": []
+  "total_violations": 6,
+  "violations": [
+    {
+      "track_id": 53,
+      "license_plate": "43-C1 256.76",
+      "vehicle_description": "Xe máy màu trắng, hai người điều khiển, cả hai đều đội mũ bảo hiểm. Người phía trước mặc áo màu xanh, người phía sau mặc áo màu trắng.",
+      "violation_type": "zone_transition",
+      "frame_count": null,
+      "image_path": "violation_images/violation_53_251.jpg"
+    },
+    {
+      "track_id": 62,
+      "license_plate": "43-E1 043.69",
+      "vehicle_description": "Xe tay ga màu xám, có người điều khiển đội mũ bảo hiểm màu hồng hình tai gấu, mặc áo trắng và váy đen.",
+      "violation_type": "zone_transition",
+      "frame_count": null,
+      "image_path": "violation_images/violation_62_335.jpg"
+    },
+    {
+      "track_id": 119,
+      "license_plate": "97-F1 203.06",
+      "vehicle_description": "Xe tay ga màu đen. Người điều khiển đội mũ bảo hiểm màu đen, mặc áo khoác màu xanh than và quần đen. ",
+      "violation_type": "zone_transition",
+      "frame_count": null,
+      "image_path": "violation_images/violation_119_717.jpg"
+    },
+    {
+      "track_id": 140,
+      "license_plate": "43-C1 472.76",
+      "vehicle_description": "Xe tay ga màu đen, phía sau có hai người, cả hai đều đội mũ bảo hiểm. Người lớn mặc áo khoác họa tiết chấm bi, đeo ba lô. Người nhỏ mặc áo màu hồng, có khăn choàng cổ.",
+      "violation_type": "zone_transition",
+      "frame_count": null,
+      "image_path": "violation_images/violation_140_1100.jpg"
+    },
+    {
+      "track_id": 93,
+      "license_plate": "92-F1 557.96",
+      "vehicle_description": "Xe tay ga màu bạc, người điều khiển đội mũ bảo hiểm màu xám, mặc áo khoác sáng màu và quần tối màu.",
+      "violation_type": "zone_transition",
+      "frame_count": null,
+      "image_path": "violation_images/violation_93_1122.jpg"
+    },
+    {
+      "track_id": 197,
+      "license_plate": "43-G1 316.56",
+      "vehicle_description": "Xe tay ga màu đen, hai người điều khiển đội mũ bảo hiểm. Người phía trước mặc áo phông trắng, người phía sau mặc áo đỏ.",
+      "violation_type": "zone_transition",
+      "frame_count": null,
+      "image_path": "violation_images/violation_197_1163.jpg"
+    }
+  ]
 }

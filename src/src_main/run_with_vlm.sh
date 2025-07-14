@@ -12,7 +12,32 @@ export GEMINI_API_KEY="AIzaSyDSF1qp4vK5AkAIKwO1_3kkaolkLxRomVU"
 VIDEO_PATH="/home/quangsang/Study/data/0006_cut.mp4"
 
 # Run the enhanced detector (same as original + VLM background processing)
-python traffic_violation_detector.py \
+# python traffic_violation_detector.py \
+#     --input "$VIDEO_PATH" \
+#     --output_video "output_with_vlm.mp4" \
+#     --output_data "violations_with_vlm.csv" \
+#     --conf 0.65 \
+#     --iou 0.5 \
+#     --headless \
+#     --enable_vlm \
+#     --vlm_batch_size 1 \
+#     --debug \
+#     --detection_method combined \
+#     --traffic_light_bbox 1655,141,1897,246 \
+#     --stop_line 1217,1101,2734,1130 \
+#     --green_zone 1182,1117,2779,1149,3424,2136,547,2126 \
+#     --red_zone 1202,1078,2744,1104,2668,406,1172,422 \
+#     --min_frames_in_green 5 \
+#     --trajectory_interpolation 15 \
+#     --tolerance 20 \
+#     --save_preview_frames 10 \
+#     --min_pixel_percentage 0.02 \
+#     --max_dimension 3840 \
+#     --use_tensorrt \
+#     --tensorrt_workspace 16 \
+#     --half_precision
+
+python traffic_violation_detector_with_vlm.py \
     --input "$VIDEO_PATH" \
     --output_video "output_with_vlm.mp4" \
     --output_data "violations_with_vlm.csv" \
@@ -23,16 +48,16 @@ python traffic_violation_detector.py \
     --vlm_batch_size 1 \
     --debug \
     --detection_method combined \
-    --traffic_light_bbox 1655,141,1897,246 \
-    --stop_line 1217,1101,2734,1130 \
-    --green_zone 1182,1117,2779,1149,3424,2136,547,2126 \
-    --red_zone 1202,1078,2744,1104,2668,406,1172,422 \
+    --traffic_light_bbox 550,49,634,78 \
+    --stop_line 408,367,916,382 \
+    --green_zone 396,376,926,387,1141,711,187,703 \
+    --red_zone 413,357,908,370,886,164,396,160 \
     --min_frames_in_green 5 \
     --trajectory_interpolation 15 \
     --tolerance 20 \
     --save_preview_frames 10 \
     --min_pixel_percentage 0.02 \
-    --max_dimension 3840 \
+    --max_dimension 1280 \
     --use_tensorrt \
     --tensorrt_workspace 16 \
     --half_precision

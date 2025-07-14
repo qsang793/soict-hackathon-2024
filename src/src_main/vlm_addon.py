@@ -220,9 +220,13 @@ class SimpleVLMProcessor:
                 frame_count = item['frame_count']
                 image_filename = os.path.basename(item['image_path'])
                 
+                # Extract vehicle_class from violation_info if available
+                vehicle_class = item['violation_info'].get('vehicle_class', 0)  # Default to 0 (car)
+                
                 self.results[track_id] = {
                     'license_plate': result.get('license_plate'),
                     'description': result.get('description'),
+                    'vehicle_class': vehicle_class,
                     'violation_info': item['violation_info'],
                     'image_path': item['image_path'],
                     'processed_at': time.time()
@@ -234,6 +238,7 @@ class SimpleVLMProcessor:
                     'frame_count': frame_count,
                     'license_plate': plate,
                     'vehicle_description': result.get('description'),
+                    'vehicle_class': vehicle_class,  # Add vehicle_class to VLM output
                     'image_filename': image_filename
                 }
                 print(f"VLM_RESULT: {json.dumps(vlm_data)}")

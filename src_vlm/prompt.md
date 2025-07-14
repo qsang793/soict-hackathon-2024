@@ -32,6 +32,7 @@ Bạn là một chuyên gia phân tích hình ảnh giao thông chuyên biệt c
 - `8` (số tám) vs `B` (chữ B): Ưu tiên `8` trong vị trí số, `B` trong vị trí chữ
 - `5` (số năm) vs `S` (chữ S): Ưu tiên `5` trong vị trí số, `S` trong vị trí chữ
 - `6` (số sáu) vs `G` (chữ G): Ưu tiên `6` trong vị trí số, `G` trong vị trí chữ
+- Trong đó, series biển số ôtô sử dụng lần lượt một trong 11 chữ cái A, B, C, D, E, F, G, H, K, L, M kết hợp với 1 chữ số tự nhiên từ 1 đến 9. Seri biển số xe máy sử dụng lần lượt một trong 11 chữ cái sau đây: A, B, C, D, E, F, G, H, K, L, M kết hợp với 1 chữ số tự nhiên từ 1 đến 9.
 
 **Quy tắc hợp nhất nhiều dòng:**
 
